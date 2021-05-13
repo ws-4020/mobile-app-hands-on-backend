@@ -35,6 +35,16 @@ public class TodoAction {
         return new TodoResponse(todo.id(), todo.text(), todo.status());
     }
 
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public void delete(HttpRequest request, ExecutionContext context) {
+
+        TodoId todoId = new TodoId(Long.valueOf(request.getParam("todoId")[0]));
+
+        todoService.deleteTodo(todoId);
+
+    }
+
     public static class PutRequest {
         @NotNull
         public Boolean completed;

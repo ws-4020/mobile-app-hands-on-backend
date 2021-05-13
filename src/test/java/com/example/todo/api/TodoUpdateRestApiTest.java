@@ -42,4 +42,5 @@ public class TodoUpdateRestApiTest extends SimpleRestTestSupport {
 
         openApiValidator.validate("putTodo", request, response);
     }
+
 }

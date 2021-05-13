@@ -4,8 +4,6 @@ info:
   version: '1.0.0'
   description: サービス開発ハンズオンで作成するToDoアプリのREST API。
 tags:
-  - name: users
-    description: ユーザー認証
   - name: todos
     description: ToDo管理
 servers:
@@ -40,8 +38,6 @@ paths:
                     - id: 2003
                       text: やること3
                       completed: false
-        '403':
-          description: Forbidden
     post:
       summary: ToDoの登録
       tags:
@@ -81,8 +77,6 @@ paths:
                     completed: false
         '400':
           description: Bad Request
-        '403':
-          description: Forbidden
   '/api/todos/{todoId}':
     parameters:
       - name: todoId
@@ -131,8 +125,8 @@ paths:
                     completed: true
         '400':
           description: Bad Request
-        '403':
-          description: Forbidden
+        '404':
+          description: Not Found
     delete:
       summary: ToDoの削除
       description: >
@@ -143,128 +137,6 @@ paths:
       responses:
         '204':
           description: No Content
-        '403':
-          description: Forbidden
-  /api/signup:
-    post:
-      summary: アカウントの登録
-      description: >
-        ToDoアプリを利用するのに必要となるユーザーアカウントを登録する。
-        **ユーザー名**は識別できるように一意である必要がある。
-      tags:
-        - users
-      operationId: signup
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                userName:
-                  type: string
-                  description: ユーザー名
-                password:
-                  type: string
-                  description: パスワード
-              required:
-                - userName
-                - password
-              additionalProperties: false
-            examples:
-              example:
-                value:
-                  userName: test1
-                  password: password
-      responses:
-        '204':
-          description: No Content
-        '400':
-          description: Bad Request
-        '409':
-          description: Conflict
-  /api/login:
-    post:
-      summary: ログイン
-      description: >
-        ユーザー情報で認証を行い、認証に成功した場合はログインする。
-        一部のREST APIを利用するためには、このREST APIを利用して事前にログインしておく必要がある。
-        ログイン状態は、ログアウトするREST APIを呼び出すか、一定時間が経過するまで継続する。
-      tags:
-        - users
-      operationId: login
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                userName:
-                  type: string
-                  description: ユーザー名
-                password:
-                  type: string
-                  description: パスワード
-              required:
-                - userName
-                - password
-              additionalProperties: false
-            examples:
-              example:
-                value:
-                  userName: test1
-                  password: password
-      responses:
-        '204':
-          description: No Content
-        '400':
-          description: Bad Request
-        '401':
-          description: Unauthorized
-  /api/logout:
-    post:
-      summary: ログアウト
-      description: >
-        ログイン中である場合、ログアウトする。
-      tags:
-        - users
-      operationId: logout
-      responses:
-        '204':
-          description: No Content
-        '403':
-          description: Forbidden
-  /api/csrf_token:
-    get:
-      summary: CSRFトークンの取得
-      description: >
-        HTTPヘッダに設定するためのCSRFトークンを取得する。
-      tags:
-        - users
-      operationId: getCsrfToken
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  csrfTokenHeaderName:
-                    type: string
-                    description: CSRFトークン送信用ヘッダー名
-                  csrfTokenValue:
-                    type: string
-                    description: CSRFトークン値
-                required:
-                  - csrfTokenHeaderName
-                  - csrfTokenValue
-              examples:
-                example:
-                  value:
-                    csrfTokenHeaderName: X-CSRF-TOKEN
-                    csrfTokenValue: xxxxxxxxxxxxxx
 components:
   schemas:
     Todo:
