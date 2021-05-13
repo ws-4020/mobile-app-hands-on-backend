@@ -9,13 +9,7 @@ import nablarch.test.core.http.SimpleRestTestSupport;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.ws.rs.core.MediaType;
 import java.nio.file.Paths;
-// import java.util.Map;
-
-// import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
-// import static org.hamcrest.MatcherAssert.assertThat;
-// import static org.hamcrest.Matchers.equalTo;
 
 public class TodoDeleteRestApiTest extends SimpleRestTestSupport {
 
