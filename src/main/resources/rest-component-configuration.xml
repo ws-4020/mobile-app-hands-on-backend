@@ -64,21 +64,7 @@
 
         <component class="nablarch.common.handler.threadcontext.ThreadContextClearHandler"/>
 
-        <component class="nablarch.fw.jaxrs.JaxRsResponseHandler">
-          <property name="responseFinishers">
-              <list>
-                <!-- CORSレスポンス -->
-                <component class="nablarch.fw.jaxrs.cors.CorsResponseFinisher">
-                  <property name="cors" ref="cors" />
-                </component>
-              </list>
-            </property>
-        </component>
-
-        <!-- CORSハンドラ -->
-        <component class="nablarch.fw.jaxrs.CorsPreflightRequestHandler">
-          <property name="cors" ref="cors" />
-        </component>
+        <component class="nablarch.fw.jaxrs.JaxRsResponseHandler" />
 
         <component-ref name="threadContextHandler"/>
 
@@ -86,6 +72,7 @@
 
         <component-ref name="transactionManagementHandler"/>
 
+        <component class="com.example.system.nablarch.handler.RestApiErrorResponseHandler"/>
         <!-- パッケージマッピングでActionを呼び出すため最後に定義する -->
         <component-ref name="packageMapping"/>
       </list>
