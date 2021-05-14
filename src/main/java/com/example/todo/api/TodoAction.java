@@ -28,13 +28,16 @@ public class TodoAction {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public EntityResponse put(HttpRequest request, ExecutionContext context, PutRequest requestBody) {
+
+        UserId userId = new UserId("1001");
+
         ValidatorUtil.validate(requestBody);
 
         EntityResponse response = new EntityResponse();
         TodoId todoId = new TodoId(Long.valueOf(request.getParam("todoId")[0]));
         TodoStatus status = requestBody.completed ? TodoStatus.COMPLETED : TodoStatus.INCOMPLETE;
 
-        Todo todo = todoService.updateStatus(todoId, status);
+        Todo todo = todoService.updateStatus(todoId, status, userId);
         response.setEntity(new TodoResponse(todo.id(), todo.text(), todo.status()));
         response.setStatusCode(HttpResponse.Status.CREATED.getStatusCode());
 
@@ -45,8 +48,11 @@ public class TodoAction {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public void delete(HttpRequest request, ExecutionContext context) {
+
+        UserId userId = new UserId("1001");
+
         TodoId todoId = new TodoId(Long.valueOf(request.getParam("todoId")[0]));
-        todoService.deleteTodo(todoId);
+        todoService.deleteTodo(todoId, userId);
     }
 
     public static class PutRequest {

@@ -14,10 +14,10 @@ public interface TodoRepository {
 
     void add(Todo todo);
 
-    Todo get(TodoId todoId);
+    Todo get(TodoId todoId, UserId userId);
 
     void update(Todo todo);
 
-    void delete(TodoId todoId);
+    void delete(TodoId todoId, UserId userId);
 
 }

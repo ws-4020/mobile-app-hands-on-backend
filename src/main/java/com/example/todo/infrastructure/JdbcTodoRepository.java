@@ -5,6 +5,7 @@ import com.example.todo.domain.*;
 import com.example.todo.infrastructure.entity.TodoEntity;
 import com.example.todo.infrastructure.entity.TodoIdSequence;
 import nablarch.common.dao.EntityList;
+import nablarch.common.dao.NoDataException;
 import nablarch.common.dao.UniversalDao;
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 
@@ -48,9 +49,16 @@ public class JdbcTodoRepository implements TodoRepository {
     }
 
     @Override
-    public Todo get(TodoId todoId) {
-        TodoEntity todoEntity = UniversalDao.findById(TodoEntity.class, todoId.value());
-        return createTodo(todoEntity);
+    public Todo get(TodoId todoId, UserId userId) {
+
+        Map<String, Object> condition = Map.of("todoId", todoId.value(), "userId", userId.value());
+        EntityList<TodoEntity> todoEntities = UniversalDao.findAllBySqlFile(TodoEntity.class, "FIND_BY_TODOID_USERID", condition);
+        if(todoEntities.size() <= 0 ) {
+            throw new NoDataException();
+        }
+
+        return createTodo(todoEntities.get(0));
+
     }
 
     @Override
@@ -64,9 +72,10 @@ public class JdbcTodoRepository implements TodoRepository {
     }
 
     @Override
-    public void delete(TodoId todoId) {
+    public void delete(TodoId todoId, UserId userId) {
         TodoEntity todoEntity = new TodoEntity();
         todoEntity.setTodoId(todoId.value());
+        todoEntity.setUserId(userId.value());
         UniversalDao.delete(todoEntity);
     }
 

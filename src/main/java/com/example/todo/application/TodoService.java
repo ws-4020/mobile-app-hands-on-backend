@@ -26,15 +26,15 @@ public class TodoService {
         return newTodo;
     }
     
-    public Todo updateStatus(TodoId todoId, TodoStatus status) {
-        Todo todo = todoRepository.get(todoId);
+    public Todo updateStatus(TodoId todoId, TodoStatus status, UserId userId) {
+        Todo todo = todoRepository.get(todoId, userId);
         Todo changedTodo = todo.changeStatus(status);
         todoRepository.update(changedTodo);
         return changedTodo;
     }
 
-    public void deleteTodo(TodoId todoId) {
-        todoRepository.delete(todoId);
+    public void deleteTodo(TodoId todoId, UserId userId) {
+        todoRepository.delete(todoId, userId);
     }
 
 }
