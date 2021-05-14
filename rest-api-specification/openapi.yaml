@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: ToDo REST API
   version: '1.0.0'
-  description: サービス開発ハンズオンで作成するToDoアプリのREST API。
+  description: ToDoアプリのREST API。
 tags:
   - name: todos
     description: ToDo管理
@@ -35,9 +35,6 @@ paths:
                     - id: 2002
                       text: やること２
                       completed: false
-                    - id: 2003
-                      text: やること3
-                      completed: false
     post:
       summary: ToDoの登録
       tags:
@@ -63,8 +60,8 @@ paths:
                 value:
                   text: やること３
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           content:
             application/json:
               schema:
@@ -111,7 +108,7 @@ paths:
                 value:
                   completed: true
       responses:
-        '200':
+        '201':
           description: OK
           content:
             application/json:

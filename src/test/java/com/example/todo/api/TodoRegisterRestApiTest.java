@@ -36,7 +36,7 @@ public class TodoRegisterRestApiTest extends SimpleRestTestSupport {
                 .setBody(Map.of("text", "テストする"));
         HttpResponse response = sendRequest(request);
 
-        assertStatusCode("ToDoの登録", HttpResponse.Status.OK, response);
+        assertStatusCode("ToDoの登録", HttpResponse.Status.CREATED, response);
 
         assertThat(response.getBodyString(), hasJsonPath("$.id", Matchers.notNullValue()));
         assertThat(response.getBodyString(), hasJsonPath("$.text", equalTo("テストする")));

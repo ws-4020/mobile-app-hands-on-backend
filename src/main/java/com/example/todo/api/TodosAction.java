@@ -1,6 +1,7 @@
 package com.example.todo.api;
 
 import com.example.todo.domain.*;
+
 import com.example.todo.application.TodoService;
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 
@@ -14,6 +15,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import nablarch.core.validation.ee.ValidatorUtil;
 import javax.validation.constraints.NotNull;
+
+import nablarch.fw.jaxrs.EntityResponse;
+import nablarch.fw.web.HttpResponse;
 
 @SystemRepositoryComponent
 @Path("/todos")
@@ -35,33 +39,22 @@ public class TodosAction {
                 .collect(Collectors.toList());
     }
 
-    public static class TodoResponse {
-
-        public final Long id;
-
-        public final String text;
-
-        public final Boolean completed;
-
-        public TodoResponse(TodoId id, TodoText text, TodoStatus status) {
-            this.id = id.value();
-            this.text = text.value();
-            this.completed = status == TodoStatus.COMPLETED;
-        }
-    }
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public TodoResponse post(PostRequest requestBody) {
+    public EntityResponse post(PostRequest requestBody) {
         ValidatorUtil.validate(requestBody);
 
+        EntityResponse response = new EntityResponse();
         UserId userId = new UserId("1001");
         TodoText text = new TodoText(requestBody.text);
 
         Todo todo = todoService.addTodo(userId, text);
+        response.setEntity(new TodoResponse(todo.id(), todo.text(), todo.status()));
+        response.setStatusCode(HttpResponse.Status.CREATED.getStatusCode());
 
-        return new TodoResponse(todo.id(), todo.text(), todo.status());
+        return response;
+
     }
 
     public static class PostRequest {

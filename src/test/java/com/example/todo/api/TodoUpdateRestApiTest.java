@@ -34,11 +34,24 @@ public class TodoUpdateRestApiTest extends SimpleRestTestSupport {
                 .setBody(Map.of("completed", true));
         HttpResponse response = sendRequest(request);
 
-        assertStatusCode("ToDoのステータス更新", HttpResponse.Status.OK, response);
+        assertStatusCode("ToDoのステータス更新", HttpResponse.Status.CREATED, response);
 
         assertThat(response.getBodyString(), hasJsonPath("$.id", equalTo(2002)));
         assertThat(response.getBodyString(), hasJsonPath("$.text", equalTo("やること２")));
         assertThat(response.getBodyString(), hasJsonPath("$.completed", equalTo(true)));
+
+        openApiValidator.validate("putTodo", request, response);
+        
+    }
+
+    @Test
+    public void RESTAPIでToDoの状態を更新できない() throws Exception {
+        RestMockHttpRequest request = put("/api/todos/9002")
+                .setHeader("Content-Type", MediaType.APPLICATION_JSON)
+                .setBody(Map.of("completed", true));
+        HttpResponse response = sendRequest(request);
+
+        assertStatusCode("ToDoのステータス更新出来ない(該当無)", HttpResponse.Status.NOT_FOUND, response);
 
         openApiValidator.validate("putTodo", request, response);
     }
