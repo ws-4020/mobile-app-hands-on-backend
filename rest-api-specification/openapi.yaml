@@ -7,9 +7,9 @@ tags:
   - name: todos
     description: ToDo管理
 servers:
-  - url: 'http://localhost:9080'
+  - url: 'http://localhost:9080/api'
 paths:
-  /api/todos:
+  /todos:
     get:
       summary: ToDo一覧の取得
       description: >
@@ -35,6 +35,8 @@ paths:
                     - id: 2002
                       text: やること２
                       completed: false
+                empty:
+                  value: []
     post:
       summary: ToDoの登録
       tags:
@@ -47,14 +49,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                text:
-                  type: string
-                  description: ToDoのタイトル
-              required:
-                - text
-              additionalProperties: false
+              $ref: '#/components/schemas/NewTodo'
             examples:
               example:
                 value:
@@ -74,7 +69,7 @@ paths:
                     completed: false
         '400':
           description: Bad Request
-  '/api/todos/{todoId}':
+  '/todos/{todoId}':
     parameters:
       - name: todoId
         in: path
@@ -95,14 +90,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                completed:
-                  type: boolean
-                  description: ToDoのステータス
-              required:
-                - completed
-              additionalProperties: false
+              $ref: '#/components/schemas/ToDoStatus'
             examples:
               example:
                 value:
@@ -153,6 +141,28 @@ components:
       required:
         - id
         - text
+        - completed
+      additionalProperties: false
+    NewTodo:
+      title: NewTodo
+      type: object
+      description: ToDoの登録情報
+      properties:
+        text:
+          type: string
+          description: ToDoの内容
+      required:
+        - text
+      additionalProperties: false
+    ToDoStatus:
+      title: ToDoStatus
+      type: object
+      description: ToDoのステータス
+      properties:
+        completed:
+          type: boolean
+          description: ToDoのステータス
+      required:
         - completed
       additionalProperties: false
   securitySchemes: {}
