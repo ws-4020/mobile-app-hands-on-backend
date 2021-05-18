@@ -1,8 +1,11 @@
 package com.example.todo.api;
 
-import com.example.todo.domain.*;
-
+import com.example.todo.api.response.TodoResponse;
 import com.example.todo.application.TodoService;
+import com.example.todo.domain.Todo;
+import com.example.todo.domain.TodoText;
+import com.example.todo.domain.UserId;
+
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 
 import javax.ws.rs.GET;

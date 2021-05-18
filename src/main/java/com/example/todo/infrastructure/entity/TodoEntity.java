@@ -1,6 +1,10 @@
 package com.example.todo.infrastructure.entity;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "todo")
@@ -14,6 +18,7 @@ public class TodoEntity {
 
     private Boolean completed;
 
+    @Id
     private String userId;
 
     public Long getTodoId() {

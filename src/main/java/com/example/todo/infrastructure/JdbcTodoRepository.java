@@ -1,11 +1,15 @@
 package com.example.todo.infrastructure;
 
 import com.example.todo.application.TodoRepository;
-import com.example.todo.domain.*;
+import com.example.todo.domain.Todo;
+import com.example.todo.domain.TodoId;
+import com.example.todo.domain.TodoStatus;
+import com.example.todo.domain.TodoText;
+import com.example.todo.domain.UserId;
 import com.example.todo.infrastructure.entity.TodoEntity;
 import com.example.todo.infrastructure.entity.TodoIdSequence;
+
 import nablarch.common.dao.EntityList;
-import nablarch.common.dao.NoDataException;
 import nablarch.common.dao.UniversalDao;
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 
@@ -50,15 +54,9 @@ public class JdbcTodoRepository implements TodoRepository {
 
     @Override
     public Todo get(TodoId todoId, UserId userId) {
-
-        Map<String, Object> condition = Map.of("todoId", todoId.value(), "userId", userId.value());
-        EntityList<TodoEntity> todoEntities = UniversalDao.findAllBySqlFile(TodoEntity.class, "FIND_BY_TODOID_USERID", condition);
-        if(todoEntities.size() <= 0 ) {
-            throw new NoDataException();
-        }
-
-        return createTodo(todoEntities.get(0));
-
+        Object[] conditions = new Object[]{todoId.value(), userId.value()};
+        TodoEntity todoEntity = UniversalDao.findById(TodoEntity.class, conditions);
+        return createTodo(todoEntity);
     }
 
     @Override

@@ -1,9 +1,14 @@
 package com.example.todo.application;
 
-import com.example.todo.domain.*;
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 
 import java.util.List;
+
+import com.example.todo.domain.Todo;
+import com.example.todo.domain.TodoId;
+import com.example.todo.domain.TodoStatus;
+import com.example.todo.domain.TodoText;
+import com.example.todo.domain.UserId;
 
 @SystemRepositoryComponent
 public class TodoService {

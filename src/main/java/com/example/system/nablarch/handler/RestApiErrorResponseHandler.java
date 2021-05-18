@@ -4,7 +4,6 @@ import nablarch.common.dao.NoDataException;
 import nablarch.fw.ExecutionContext;
 import nablarch.fw.Handler;
 import nablarch.fw.web.HttpErrorResponse;
-import nablarch.fw.web.HttpResponse;
 import nablarch.fw.web.HttpResponse.Status;
 
 /**

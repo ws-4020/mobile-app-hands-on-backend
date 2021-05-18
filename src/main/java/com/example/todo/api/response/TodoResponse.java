@@ -1,4 +1,8 @@
-package com.example.todo.domain;
+package com.example.todo.api.response;
+
+import com.example.todo.domain.TodoId;
+import com.example.todo.domain.TodoStatus;
+import com.example.todo.domain.TodoText;
 
 public class TodoResponse {
 
@@ -15,3 +19,5 @@ public class TodoResponse {
     }
     
 }
+
+

@@ -1,7 +1,10 @@
 package com.example.todo.api;
 
 import com.example.todo.application.TodoService;
-import com.example.todo.domain.*;
+import com.example.todo.domain.Todo;
+import com.example.todo.domain.TodoId;
+import com.example.todo.domain.TodoStatus;
+import com.example.todo.domain.UserId;
 
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 import nablarch.core.validation.ee.ValidatorUtil;
@@ -10,9 +13,14 @@ import nablarch.fw.jaxrs.EntityResponse;
 import nablarch.fw.web.HttpRequest;
 
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import nablarch.fw.web.HttpResponse;
+import com.example.todo.api.response.TodoResponse;
 
 @SystemRepositoryComponent
 @Path("/todos/{todoId}")
@@ -48,9 +56,7 @@ public class TodoAction {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public void delete(HttpRequest request, ExecutionContext context) {
-
         UserId userId = new UserId("1001");
-
         TodoId todoId = new TodoId(Long.valueOf(request.getParam("todoId")[0]));
         todoService.deleteTodo(todoId, userId);
     }
