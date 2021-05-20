@@ -1,0 +1,168 @@
+openapi: 3.0.3
+info:
+  title: ToDo REST API
+  version: '1.0.0'
+  description: ToDoアプリのREST API。
+tags:
+  - name: todos
+    description: ToDo管理
+servers:
+  - url: 'http://localhost:9080/api'
+paths:
+  /todos:
+    get:
+      summary: ToDo一覧の取得
+      description: >
+        登録しているToDoを全て取得する。
+      tags:
+        - todos
+      operationId: getTodos
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+              examples:
+                example:
+                  value:
+                    - id: 2001
+                      text: やること１
+                      completed: true
+                    - id: 2002
+                      text: やること２
+                      completed: false
+                empty:
+                  value: []
+    post:
+      summary: ToDoの登録
+      tags:
+        - todos
+      description: >
+        ToDoを登録する。
+      operationId: postTodo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTodo'
+            examples:
+              example:
+                value:
+                  text: やること３
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+              examples:
+                example:
+                  value:
+                    id: 2003
+                    text: やること３
+                    completed: false
+        '400':
+          description: Bad Request
+  '/todos/{todoId}':
+    parameters:
+      - name: todoId
+        in: path
+        description: ToDoのID
+        required: true
+        schema:
+          type: number
+        example: '2002'
+    put:
+      summary: ToDoステータスの更新
+      description: >
+        ToDoのステータスを更新する。
+      tags:
+        - todos
+      operationId: putTodo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToDoStatus'
+            examples:
+              example:
+                value:
+                  completed: true
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+              examples:
+                example:
+                  value:
+                    id: 2002
+                    text: やること２
+                    completed: true
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+    delete:
+      summary: ToDoの削除
+      description: >
+        登録しているToDoを削除する。
+      tags:
+        - todos
+      operationId: deleteTodo
+      responses:
+        '204':
+          description: No Content
+components:
+  schemas:
+    Todo:
+      title: Todo
+      type: object
+      description: ToDo情報
+      properties:
+        id:
+          type: integer
+          description: ToDoのID
+        text:
+          type: string
+          description: ToDoのタイトル
+        completed:
+          type: boolean
+          description: ToDoのステータス
+      required:
+        - id
+        - text
+        - completed
+      additionalProperties: false
+    NewTodo:
+      title: NewTodo
+      type: object
+      description: ToDoの登録情報
+      properties:
+        text:
+          type: string
+          description: ToDoの内容
+      required:
+        - text
+      additionalProperties: false
+    ToDoStatus:
+      title: ToDoStatus
+      type: object
+      description: ToDoのステータス
+      properties:
+        completed:
+          type: boolean
+          description: ToDoのステータス
+      required:
+        - completed
+      additionalProperties: false
+  securitySchemes: {}
