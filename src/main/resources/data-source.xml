@@ -7,7 +7,7 @@
   <import file="nablarch/core/db/connection-factory-datasource.xml"/>
 
   <!-- ダイアレクト設定 -->
-  <component name="dialect" class="nablarch.core.db.dialect.PostgreSQLDialect" />
+  <component name="dialect" class="nablarch.core.db.dialect.H2Dialect" />
 
   <!-- データソース設定 -->
   <component name="dataSource" class="com.zaxxer.hikari.HikariDataSource" autowireType="None">
