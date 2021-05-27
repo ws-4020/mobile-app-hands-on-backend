@@ -90,7 +90,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ToDoStatus'
+              $ref: '#/components/schemas/TodoStatus'
             examples:
               example:
                 value:
@@ -154,8 +154,8 @@ components:
       required:
         - text
       additionalProperties: false
-    ToDoStatus:
-      title: ToDoStatus
+    TodoStatus:
+      title: TodoStatus
       type: object
       description: ToDoのステータス
       properties:
