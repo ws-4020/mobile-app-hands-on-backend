@@ -1,44 +1,121 @@
 # バックエンド サンプルアプリ
 
-## DBコンテナの起動
+## 動作環境
 
-テスト実行前にDBコンテナを起動します。コマンドプロンプトまたはターミナルを使用してルートディレクトリへ移動して、以下を実行してください。
+実行環境に以下のソフトウェアがインストールされている事を前提とします。
 
-```bash
-docker-compose -f docker/docker-compose.dev.yml up -d
-```
+* Java Version：8以降
+
+以下は、本手順では事前準備不要です。
+
+|ソフトウェア|説明|
+|:---|:---|
+|APサーバ|このアプリケーションはJetty9(Apache Mavenで実行した場合)、Tomcat9(Dockerコンテナを実行した場合)を組み込んであるため、別途インストールの必要はありません。|
+|DBサーバ|このアプリケーションはH2 Database Engine(以下H2)を組み込んであるため、別途インストールの必要はありません。|
 
 ## テスト実行
 
-DBコンテナ起動後、以下でテスト実行してください。
+以下コマンドでテストを実行してください。
 
 ```bash
-mvn test
+./mvnw test
 ```
 
-実行結果、コンソールに`BUILD SUCCESS`が出力されていれば、テスト結果は無事成功です。
-
-## バックエンドアプリの起動
-
-バックエンドアプリの起動は以下のコマンドを実行してください。
-※起動時にデータベースに接続するため、DBコンテナを起動していない場合は[DBコンテナの起動](#DBコンテナの起動)を参照して起動してください。
+Windowsの場合は、以下コマンドでテストを実行してください。
 
 ```bash
-mvn jetty:run
+mvnw.cmd test
 ```
 
-実行結果、コンソールに`Started Jetty Server`が出力されていれば、無事に起動成功です。
+コンソールに`BUILD SUCCESS`が出力されていれば、テスト結果は無事成功です。
 
-## Container Imageをローカルに作成
+## サンプルアプリの起動
 
-Container Imagesをビルドしてローカルにインストールする場合は、mvnでjibをつかってコンテナを作成する。
+サンプルアプリの起動はApache Mavenを利用する方法と、Dockerを利用する方法があります。
 
+### Apache Mavenを利用する方法
+
+以下のコマンドを実行してください。
+
+```bash
+./mvnw jetty:run
 ```
-mvn package jib:dockerBuild -DskipTests
+
+Windowsの場合は、以下コマンドでテスト実行してください。
+
+```bash
+mvnw.cmd jetty:run
 ```
 
-コンテナを利用して起動する場合は `docker/if-app-container-image-published.yml` を利用する。
+コンソールに`Started Jetty Server`が出力されていれば、無事に起動成功です。
 
+### Dockerを利用する方法
+
+以下のコマンドを実行してください。
+
+```bash
+docker run --rm -d -p 9080:8080 --name todo-app-backend todo-app-backend:latest
 ```
-docker-compose -f docker/if-app-container-image-published.yml
+
+H2に格納されているデータを永続化したい場合は、[Volume](https://docs.docker.com/storage/volumes/)を作成します。
+
+```bash
+docker run --rm -d -p 9080:8080 --name todo-app-backend -v todo-app-backend-volume:/usr/local/tomcat/h2 todo-app-backend:latest
 ```
+
+## Proxy環境下でサンプルアプリを動かす場合
+
+### Apache Maven Wrapperを利用してサンプルアプリを動かす場合
+
+以下の設定ファイルにプロキシ情報を設定する必要があります。設定ファイルが存在しない場合は、新規作成してください。
+* `[プロジェクトルート]/.mvn/jvm.config`
+* `[OSのユーザホームディレクトリ]/.m2/settings.xml`
+
+`jvm.config`の設定例
+```properties
+-Dhttp.proxyHost=[プロキシサーバのホスト]
+-Dhttp.proxyPort=[プロキシサーバのポート]
+-Dhttp.proxyUser=[プロキシサーバの認証ユーザ]
+-Dhttp.proxyPassword=[プロキシサーバの認証パスワード]
+-Dhttps.proxyHost=[プロキシサーバのホスト]
+-Dhttps.proxyPort=[プロキシサーバのポート]
+-Dhttps.proxyUser=[プロキシサーバの認証ユーザ]
+-Dhttps.proxyPassword=[プロキシサーバの認証パスワード]
+-Djdk.http.auth.tunneling.disabledSchemes=
+```
+`settings.xml`の設定内容の詳細については、 [Apache Maven Project - Settings Reference - Introduction](https://maven.apache.org/settings.html#settings-reference) を参照してください。
+
+`settings.xml`の設定例
+```xml
+...
+  <proxies>
+    <proxy>
+      <id>proxy-http</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <host>[プロキシサーバのホスト]</host>
+      <port>[プロキシサーバのポート]</port>
+      <username>[プロキシサーバの認証ユーザ]</username>
+      <password>[プロキシサーバの認証パスワード]</password>
+    </proxy>
+    <proxy>
+      <id>proxy-https</id>
+      <active>true</active>
+      <protocol>https</protocol>
+      <host>[プロキシサーバのホスト]</host>
+      <port>[プロキシサーバのポート]</port>
+      <username>[プロキシサーバの認証ユーザ]</username>
+      <password>[プロキシサーバの認証パスワード]</password>
+    </proxy>
+  </proxies>
+...
+```
+
+### Dockerを利用してサンプルアプリを動かす場合
+
+DockerをProxy環境で動かす方法の一つとして、環境変数にプロキシ情報を設定します。
+* HTTP_PROXY
+* HTTPS_PROXY
+* NO_PROXY
+
+その他の方法や詳細については、[Configure Docker to use a proxy server](https://docs.docker.com/network/proxy/) を参照してください。
