@@ -13,6 +13,7 @@ import nablarch.common.dao.EntityList;
 import nablarch.common.dao.UniversalDao;
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,7 +23,8 @@ public class JdbcTodoRepository implements TodoRepository {
 
     @Override
     public List<Todo> list(UserId userId) {
-        Map<String, String> condition = Map.of("userId", userId.value());
+        Map<String, String> condition = new HashMap<>();
+        condition.put("userId", userId.value());
         EntityList<TodoEntity> todoEntities = UniversalDao.findAllBySqlFile(TodoEntity.class, "FIND_BY_USERID", condition);
 
         return todoEntities.stream().map(this::createTodo).collect(Collectors.toList());
